@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 
-const dataFilePath = path.join(process.cwd(),'', 'authors.json');
+const dataFilePath = path.join(process.cwd(),'data', 'authors.json');
 
 async function readAuthorsData() {
   const data = await fs.readFile(dataFilePath, 'utf8');
