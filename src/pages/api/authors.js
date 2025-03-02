@@ -1,4 +1,6 @@
+// Import de fs.promises pour gérer les fichiers
 import { promises as fs } from 'fs';
+// Import de path pour définir un chemin correct
 import path from 'path';
 
 // Définition du chemin du fichier authors.json qui stocke les auteurs
