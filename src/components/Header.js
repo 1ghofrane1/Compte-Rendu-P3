@@ -113,22 +113,22 @@ const Header = ({ className }) => {
           </Link>
         ))}
 
-{authors.length > 0 && (
-  <div className={styles.authors}>
-    Auteurs :{' '}
-    {authors.map((author) => (
-      <div key={author.id} className={styles.authorItem}>
-        <span className={styles.author}>{author.name}</span>
-        <button onClick={() => handleUpdateAuthor(author.id, prompt("Nouveau nom :", author.name))}>
-          Modifier
-        </button>
-        <button onClick={() => handleDeleteAuthor(author.id)}>
-          Supprimer
-        </button>
-      </div>
-    ))}
-  </div>
-)}
+        {authors.length > 0 && (
+          <div className={styles.authors}>
+            Auteurs :{' '}
+            {authors.map((author) => (
+              <div key={author.id} className={styles.authorItem}>
+                <span className={styles.author}>{author.name}</span>
+                <button onClick={() => handleUpdateAuthor(author.id, prompt("Nouveau nom :", author.name))}>
+                  Modifier
+                </button>
+                <button onClick={() => handleDeleteAuthor(author.id)}>
+                  Supprimer
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Formulaire pour ajouter un nouvel auteur */}
         <form onSubmit={handleSubmit(handleAddAuthor)} className={styles.addAuthorForm}>
