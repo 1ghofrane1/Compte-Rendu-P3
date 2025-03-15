@@ -113,6 +113,7 @@ const Header = ({ className }) => {
           </Link>
         ))}
 
+        {/*affichage de la liste des auteurs*/}
         {authors.length > 0 && (
           <div className={styles.authors}>
             Auteurs :{' '}

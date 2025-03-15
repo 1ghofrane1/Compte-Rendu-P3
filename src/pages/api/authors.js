@@ -59,30 +59,35 @@ export default async function handler(req, res) {
       res.status(500).json({ message: 'Erreur serveur lors de l\'ajout de l\'auteur.' });
     }
   } else if(req.method==='PUT'){
-    const {id, name} = req.body;
+    //modification d'un auteur via une requete PUT
+    const {id, name} = req.body; // recuperation de l'id et du nouveau nom
+    // verif des donnees envoyes
     if (!id || typeof id !== 'number' || !name || typeof name !== 'string' || name.trim() === '') {
       return res.status(400).json({ message: "L'ID et le nom sont obligatoires et doivent être valides." });
     }
-      let authors = await readAuthorsData();
+      let authors = await readAuthorsData(); // lecture des auteurs existants
+
+      // recherche de l'auteur par son id
       const index = authors.findIndex(author => author.id === id);
       if (index === -1) {
-        return res.status(404).json({ message: "Auteur non trouvé." });
+        return res.status(404).json({ message: "Auteur non trouvé." }); // retourne une erreur si l'auteur n'existe pas
       }
-      authors[index].name = name;
-      await writeAuthorsData(authors);
-      return res.status(200).json(authors[index]);
+      authors[index].name = name; // mise a jour dun nom de l'auteur 
+      await writeAuthorsData(authors);// sauvegarde des modifications
+      return res.status(200).json(authors[index]); // reponse 200 OK avec l'auteur modifié
     } else if(req.method === 'DELETE') {
-    const { id } = req.body;
+      // suppression d'un auteur via via une requete DELETE 
+    const { id } = req.body; // recuperation de l'id de l'auteur à supprimer
     if (!id) {
-      return res.status(400).json({ message: "L'ID est obligatoire." });
+      return res.status(400).json({ message: "L'ID est obligatoire." }); // erreur si aucun id n'est fourni
     }
-    let authors = await readAuthorsData();
-    const newAuthors = authors.filter(author => author.id !== id);
+    let authors = await readAuthorsData(); // lecture des auteurs existants
+    const newAuthors = authors.filter(author => author.id !== id);// filtrage pour supprimer l'auteur
     if (newAuthors.length === authors.length) {
-      return res.status(404).json({ message: "Auteur non trouvé." });
+      return res.status(404).json({ message: "Auteur non trouvé." });// erreur si l'id n'existe pas
     }
-    await writeAuthorsData(newAuthors);
-    return res.status(200).json({ message: "Auteur supprimé avec succès." });
+    await writeAuthorsData(newAuthors); // sauvegarde apres suppression
+    return res.status(200).json({ message: "Auteur supprimé avec succès." });// reponse 200 OK
   }
  else {
     // Toute autre méthode HTTP est refusée
