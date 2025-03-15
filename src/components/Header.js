@@ -62,6 +62,44 @@ const Header = ({ className }) => {
     }
   };
 
+  const handleUpdateAuthor = async (id, newName) => {
+    try {
+      const response = await fetch('/api/authors', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, name: newName })
+      });
+  
+      if (response.ok) {
+        const updatedAuthor = await response.json();
+        setAuthors(authors.map(author => author.id === id ? updatedAuthor : author));
+      } else {
+        const errorData = await response.json();
+        console.error("Erreur lors de la modification :", errorData.message);
+      }
+    } catch (error) {
+      console.error("Erreur de connexion au serveur :", error);
+    }
+  };
+  const handleDeleteAuthor = async (id) => {
+    try {
+      const response = await fetch('/api/authors', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id })
+      });
+  
+      if (response.ok) {
+        setAuthors(authors.filter(author => author.id !== id));
+      } else {
+        const errorData = await response.json();
+        console.error("Erreur lors de la suppression :", errorData.message);
+      }
+    } catch (error) {
+      console.error("Erreur de connexion au serveur :", error);
+    }
+  };
+
   return (
     <header className={cn(styles.header, className)}>
       <nav className={styles.nav}>
@@ -75,16 +113,22 @@ const Header = ({ className }) => {
           </Link>
         ))}
 
-        {authors.length > 0 && (
-          <div className={styles.authors}>
-            Auteurs :{' '}
-            {authors.map((author) => (
-              <span key={author.id} className={styles.author}>
-                {author.name}
-              </span>
-            ))}
-          </div>
-        )}
+{authors.length > 0 && (
+  <div className={styles.authors}>
+    Auteurs :{' '}
+    {authors.map((author) => (
+      <div key={author.id} className={styles.authorItem}>
+        <span className={styles.author}>{author.name}</span>
+        <button onClick={() => handleUpdateAuthor(author.id, prompt("Nouveau nom :", author.name))}>
+          Modifier
+        </button>
+        <button onClick={() => handleDeleteAuthor(author.id)}>
+          Supprimer
+        </button>
+      </div>
+    ))}
+  </div>
+)}
 
         {/* Formulaire pour ajouter un nouvel auteur */}
         <form onSubmit={handleSubmit(handleAddAuthor)} className={styles.addAuthorForm}>
@@ -94,7 +138,7 @@ const Header = ({ className }) => {
             placeholder="Nom de l’auteur"
             className={styles.authorInput}
           />
-          <button type="submit" className={styles.addAuthorButton}>
+          <button type="submit" className={`${styles.button} ${styles.addAuthorButton}`}>
             Ajouter Auteur
           </button>
         </form>

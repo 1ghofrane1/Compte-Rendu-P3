@@ -26,7 +26,7 @@
 }
 
 .button {
-  background-color: #007bff;
+  background-color: #932fda;
   color: white;
   border: none;
   padding: 0.7rem 1rem;
@@ -36,7 +36,7 @@
 }
 
 .button:hover {
-  background-color: #0056b3;
+  background-color: #ae43fb;
 }
 
 .error, 

@@ -58,7 +58,33 @@ export default async function handler(req, res) {
       console.error('Erreur lors de l\'ajout de l\'auteur :', error);
       res.status(500).json({ message: 'Erreur serveur lors de l\'ajout de l\'auteur.' });
     }
-  } else {
+  } else if(req.method==='PUT'){
+    const {id, name} = req.body;
+    if (!id || typeof id !== 'number' || !name || typeof name !== 'string' || name.trim() === '') {
+      return res.status(400).json({ message: "L'ID et le nom sont obligatoires et doivent être valides." });
+    }
+      let authors = await readAuthorsData();
+      const index = authors.findIndex(author => author.id === id);
+      if (index === -1) {
+        return res.status(404).json({ message: "Auteur non trouvé." });
+      }
+      authors[index].name = name;
+      await writeAuthorsData(authors);
+      return res.status(200).json(authors[index]);
+    } else if(req.method === 'DELETE') {
+    const { id } = req.body;
+    if (!id) {
+      return res.status(400).json({ message: "L'ID est obligatoire." });
+    }
+    let authors = await readAuthorsData();
+    const newAuthors = authors.filter(author => author.id !== id);
+    if (newAuthors.length === authors.length) {
+      return res.status(404).json({ message: "Auteur non trouvé." });
+    }
+    await writeAuthorsData(newAuthors);
+    return res.status(200).json({ message: "Auteur supprimé avec succès." });
+  }
+ else {
     // Toute autre méthode HTTP est refusée
     res.status(405).json({ message: 'Méthode non autorisée' });
   }
